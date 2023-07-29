@@ -11,6 +11,7 @@
 
 namespace monitor {
 class CpuSoftIrqMonitor : public MonitorInter {
+  //构建包含软中断信息的结构体
   struct SoftIrq {
     std::string cpu_name;
     int64_t hi;
@@ -32,6 +33,7 @@ class CpuSoftIrqMonitor : public MonitorInter {
   void Stop() override {}
 
  private:
+ //以中断类型为键，中断数量为值构建无需哈希表
   std::unordered_map<std::string, struct SoftIrq> cpu_softirqs_;
 };
 

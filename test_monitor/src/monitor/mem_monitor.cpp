@@ -2,7 +2,7 @@
 #include "utils/read_file.h"
 
 namespace monitor {
-static constexpr float KBToGB = 1000 * 1000;
+static constexpr float KBToGB = 1024 * 1024;
 
 void MemMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
   ReadFile mem_file("/proc/meminfo");

@@ -5,10 +5,14 @@
 #include "monitor_info.pb.h"
 
 namespace monitor {
+//重写UndataOncea函数
 void CpuStatMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
+  //利用基类创建一个cpu状态子类对象，同时打开/proc/stat文件
   ReadFile cpu_stat_file(std::string("/proc/stat"));
+  //创建数组接收从文件每一行获取到的元素，并传递给结构体中
   std::vector<std::string> cpu_stat_list;
   while (cpu_stat_file.ReadLine(&cpu_stat_list)) {
+    //根据每一行的首字符串是否为CPU来截断不相关的信息
     if (cpu_stat_list[0].find("cpu") != std::string::npos) {
       // std::cout << cpu_stat_list[0] << cpu_stat_list[1] << std::endl;
       struct CpuStat cpu_stat;
@@ -23,12 +27,14 @@ void CpuStatMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
       cpu_stat.steal = std::stof(cpu_stat_list[8]);
       cpu_stat.guest = std::stof(cpu_stat_list[9]);
       cpu_stat.guest_nice = std::stof(cpu_stat_list[10]);
-
+      //判断存储CPU信息的map当中是否已经存储数据
       auto it = cpu_stat_map_.find(cpu_stat.cpu_name);
       if (it != cpu_stat_map_.end()) {
         // std::cout << cpu_stat.cpu_name << std::endl;
+        //如果map中有数据则赋给old
         struct CpuStat old = it->second;
         auto cpu_stat_msg = monitor_info->add_cpu_stat();
+        //分别计算新的CPU时间和旧的CPU时间，并计算出最终需要的数据
         float new_cpu_total_time = cpu_stat.user + cpu_stat.system +
                                    cpu_stat.idle + cpu_stat.nice +
                                    cpu_stat.io_wait + cpu_stat.irq +
@@ -65,6 +71,7 @@ void CpuStatMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
         float cpu_soft_irq_percent = (cpu_stat.soft_irq - old.soft_irq) /
                                      (new_cpu_total_time - old_cpu_total_time) *
                                      100.00;
+        //根据protobuf语法将得到的数据传给monitor_info中对应的结构体
         cpu_stat_msg->set_cpu_name(cpu_stat.cpu_name);
         cpu_stat_msg->set_cpu_percent(cpu_percent);
         cpu_stat_msg->set_usr_percent(cpu_user_percent);
@@ -75,8 +82,10 @@ void CpuStatMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
         cpu_stat_msg->set_irq_percent(cpu_irq_percent);
         cpu_stat_msg->set_soft_irq_percent(cpu_soft_irq_percent);
       }
+      //以CPU名字为键，结构体为值，将新的数据存储在map中，便于下次数据的计算
       cpu_stat_map_[cpu_stat.cpu_name] = cpu_stat;
     }
+    //清空数组
     cpu_stat_list.clear();
   }
 

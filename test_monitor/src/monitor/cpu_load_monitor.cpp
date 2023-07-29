@@ -6,8 +6,11 @@
 #include "monitor_info.pb.h"
 
 namespace monitor {
+//重写UndataOncea函数
 void CpuLoadMonitor::UpdateOnce(monitor::proto::MonitorInfo* monitor_info) {
+  //利用ReadFile创建一个对象来获取proc中的负载信息
   ReadFile cpu_load_file(std::string("/proc/loadavg"));
+  
   std::vector<std::string> cpu_load;
   cpu_load_file.ReadLine(&cpu_load);
   load_avg_1_ = std::stof(cpu_load[0]);
