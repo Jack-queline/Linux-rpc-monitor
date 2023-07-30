@@ -33,7 +33,7 @@ QVariant CpuLoadModel::data(const QModelIndex& index, int role) const {
     if (index.row() < monitor_data_.size() && index.column() < COLUMN_MAX)
       return monitor_data_[index.row()][index.column()];
   }
-  return QVariant();
+  return MonitorInterModel::data(index, role);
 }
 
 void CpuLoadModel::UpdateMonitorInfo(

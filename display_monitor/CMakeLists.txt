@@ -23,6 +23,7 @@ set(SOURCES
 # Target
 #
 add_executable(display ${SOURCES})
+#qt object所需要的库
 set_target_properties(display PROPERTIES AUTOMOC TRUE)
 
 
