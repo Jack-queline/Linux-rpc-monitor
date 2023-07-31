@@ -1,5 +1,6 @@
-FROM  ubuntu:18.04
-
+#基于ubuntu进行构建
+FROM  ubuntu:18.04 
+#执行dockerfile安装时，无需用户手动输入YSE
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Asia/Shanghai
 
@@ -8,7 +9,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get clean && \
     apt-get autoclean
 COPY apt/sources.list /etc/apt/
-
+#linux部分
 RUN apt-get update  && apt-get upgrade -y  && \
     apt-get install -y \
     htop \
@@ -26,7 +27,7 @@ RUN apt-get update  && apt-get upgrade -y  && \
     net-tools \
     vim \
     stress 
-
+#C++与QT部分
 RUN apt-get install -y libc-ares-dev  libssl-dev gcc g++ make 
 RUN apt-get install -y  \
     libx11-xcb1 \
@@ -35,13 +36,13 @@ RUN apt-get install -y  \
     libfontconfig1 \
     libxkbcommon0   \
     libxkbcommon-x11-0
-
+#python部分
 RUN apt-get install -y python-dev \
     python3-dev \
     python-pip \
     python-all-dev 
 
-
+#拷贝文件并解 运行
 COPY install/protobuf /tmp/install/protobuf
 RUN /tmp/install/protobuf/install_protobuf.sh
 

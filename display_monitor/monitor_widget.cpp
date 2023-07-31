@@ -2,10 +2,14 @@
 
 namespace monitor {
 
-MonitorWidget::MonitorWidget(QWidget *parent) {}
+MonitorWidget::MonitorWidget(QWidget *parent) : QWidget(parent) {
+    this->setStyleSheet("background-color: #F5F5F5;");  // 设置窗口背景颜色
+    this->resize(800, 600);  // 设置窗口大小
+}
 // 显示所有监视器小部件的函数
 QWidget *MonitorWidget::ShowAllMonitorWidget(const std::string& name) {  
   QWidget *widget = new QWidget();  // 创建新的 QWidget 对象
+  widget->setStyleSheet("background-color: #FFFFFF;");  // 设置小部件背景颜色
   stack_menu_ = new QStackedLayout();  // 创建新的 QStackedLayout 对象
   stack_menu_->addWidget(InitCpuMonitorWidget());  // 添加 CPU 监视器小部件
   stack_menu_->addWidget(InitSoftIrqMonitorWidget());  // 添加软中断监视器小部件
@@ -22,17 +26,22 @@ QWidget *MonitorWidget::ShowAllMonitorWidget(const std::string& name) {
 QWidget *MonitorWidget::InitButtonMenu(const std::string& name) {  
 // 创建 CPU 按钮
   QPushButton *cpu_button = new QPushButton(QString::fromStdString(name) + "_cpu", this);  
+  cpu_button->setStyleSheet("background-color: lightgrey; color: black;");  // 设置 CPU按钮的颜色
   // 创建软中断按钮
   QPushButton *soft_irq_button = new QPushButton(QString::fromStdString(name) + "_soft_irq", this);  
+  soft_irq_button->setStyleSheet("background-color: lightgrey; color: black;");  // 设置软中断按钮的颜色
   // 创建内存按钮
   QPushButton *mem_button = new QPushButton(QString::fromStdString(name) + "_mem", this);  
+  mem_button->setStyleSheet("background-color: lightgrey; color: black;");  // 设置内存按钮的颜色
   // 创建网络按钮
   QFont *font = new QFont("Microsoft YaHei", 15, 40);  // 创建新的 QFont 对象
   QPushButton *net_button = new QPushButton(QString::fromStdString(name) + "_net", this);  
+  net_button->setStyleSheet("background-color: lightgrey; color: black;");  // 设置网络按钮的颜色
   cpu_button->setFont(*font);  // 设置 CPU 按钮的字体
   soft_irq_button->setFont(*font);  // 设置软中断按钮的字体
   mem_button->setFont(*font);  // 设置内存按钮的字体
   net_button->setFont(*font);  // 设置网络按钮的字体
+
 
   QHBoxLayout *layout = new QHBoxLayout();  // 创建新的 QHBoxLayout 对象
   layout->addWidget(cpu_button);  // 添加 CPU 按钮
@@ -56,6 +65,7 @@ QWidget *MonitorWidget::InitButtonMenu(const std::string& name) {
 
 QWidget *MonitorWidget::InitCpuMonitorWidget() {  // 初始化 CPU 监视器小部件的函数
   QWidget *widget = new QWidget();  // 创建新的 QWidget 对象
+  widget->setStyleSheet("background-color: #FFFFFF;");  // 设置小部件背景颜色
 
   QLabel *cpu_load_label = new QLabel(this);  // 创建 CPU 负载标签
   cpu_load_label->setText(tr("Monitor CpuLoad:"));  // 设置 CPU 负载标签的文本
@@ -90,6 +100,7 @@ QWidget *MonitorWidget::InitCpuMonitorWidget() {  // 初始化 CPU 监视器小�
 
 QWidget *MonitorWidget::InitSoftIrqMonitorWidget() {  // 初始化软中断监视器小部件的函数
   QWidget *widget = new QWidget();  // 创建新的 QWidget 对象
+  widget->setStyleSheet("background-color: #FFFFFF;");  // 设置小部件背景颜色
   QLabel *monitor_label = new QLabel(this);  // 创建监视器标签
   monitor_label->setText(tr("Monitor softirq:"));  // 设置监视器标签的文本
   monitor_label->setFont(QFont("Microsoft YaHei", 10, 40));  // 设置监视器标签的字体
@@ -113,6 +124,7 @@ QWidget *MonitorWidget::InitSoftIrqMonitorWidget() {  // 初始化软中断监�
 
 QWidget *MonitorWidget::InitMemMonitorWidget() {  // 初始化内存监视器小部件的函数
   QWidget *widget = new QWidget();  // 创建新的 QWidget 对象
+  widget->setStyleSheet("background-color: #FFFFFF;");  // 设置小部件背景颜色
 
   QLabel *mem_label = new QLabel(this);  // 创建内存标签
   mem_label->setText(tr("Monitor mem:"));  // 设置内存标签的文本
@@ -134,6 +146,7 @@ QWidget *MonitorWidget::InitMemMonitorWidget() {  // 初始化内存监视器小
 
 QWidget *MonitorWidget::InitNetMonitorWidget() {  // 初始化网络监视器小部件的函数
   QWidget *widget = new QWidget();  // 创建新的 QWidget 对象
+  widget->setStyleSheet("background-color: #FFFFFF;");  // 设置小部件背景颜色
 
   QLabel *net_label = new QLabel(this);  // 创建网络标签
   net_label->setText(tr("Monitor net:"));  // 设置网络标签的文本
@@ -142,6 +155,7 @@ QWidget *MonitorWidget::InitNetMonitorWidget() {  // 初始化网络监视器小
   net_monitor_view_ = new QTableView;  // 创建新的 QTableView 对象
   net_model_ = new NetModel;  // 创建新的 NetModel 对象
   net_monitor_view_->setModel(net_model_);  // 设置网络监视器视图的模型
+  net_monitor_view_->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);  // 设置表格每一列的宽度自适应
   net_monitor_view_->show();  // 显示网络监视器视图
 
   QGridLayout *layout = new QGridLayout();  // 创建新的 QGridLayout 对象
